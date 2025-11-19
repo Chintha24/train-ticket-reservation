@@ -1,14 +1,10 @@
-# .github/workflows/cicd-pipeline.yml
-
 name: Java CI/CD Pipeline
 
-# I see you correctly changed this to 'master', which is your repo's default branch.
 on:
   push:
-    branches: 
-     - master
+    branches:
+      - master
 
-# Define environment variables to use in the pom.xml
 env:
   NEXUS_URL: ${{ secrets.NEXUS_URL }}
   TOMCAT_URL: ${{ secrets.TOMCAT_URL }}
@@ -46,7 +42,6 @@ jobs:
           }]
 
     - name: 4. Build and Analyze with SonarQube
-      # ✅ FIXED: Added --settings flag to point to the correct home directory
       run: |
         mvn -B verify sonar:sonar --settings ~/.m2/settings.xml \
           -Dsonar.projectKey=train-ticket-reservation \
@@ -54,26 +49,16 @@ jobs:
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
     - name: 5. Deploy to Nexus
-      # ✅ FIXED: Changed path from .m2/ to ~/.m2/
       run: mvn -B deploy --settings ~/.m2/settings.xml
 
     - name: 6. Check WAR File Size
       run: |
-        # Find the .war file in the target directory and list its size
         find target -name "*.war" -exec ls -lh {} +
-
-   # ... (Step 6. Check WAR File Size) ...
 
     - name: 7. Deploy to Tomcat with curl
       run: |
-        # Use curl to upload the WAR file. This is more reliable than the old Maven plugin.
-        # We find the WAR file in the target/ directory
         WAR_FILE=$(find target -name "*.war" | head -n 1)
-        
         echo "Deploying $WAR_FILE to Tomcat..."
-
-        # The TOMCAT_URL secret is 'http://<ip>:8080/manager/text'
-        # This command uploads the file to the deploy endpoint.
         curl -v -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
              -T "$WAR_FILE" \
              "${{ secrets.TOMCAT_URL }}/deploy?path=/train-ticket&update=true"
