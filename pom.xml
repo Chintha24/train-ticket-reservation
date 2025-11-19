@@ -112,11 +112,6 @@
 		</dependency>
 	</dependencies>
   <distributionManagement>
-    <snapshotRepository>
-        <id>nexus-snapshots</id>
-        <url>${NEXUS_URL}/repository/maven-snapshots/</url>
-    </snapshotRepository>
-
     <repository>
         <id>nexus-releases</id>
         <url>${NEXUS_URL}/repository/maven-releases/</url>
