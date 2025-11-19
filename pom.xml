@@ -111,18 +111,16 @@
 			<version>3.1.0</version>
 		</dependency>
 	</dependencies>
-
-	<distributionManagement>
+<distributionManagement>
     <repository>
-      <id>nexus-releases</id>
-      <url>${env.NEXUS_URL}</url>
+        <id>nexus-releases</id>
+        <url>${NEXUS_URL}/repository/maven-releases/</url>
     </repository>
-  </distributionManagement>
-	<distributionManagement>
-  <repository>
-    <id>nexus-releases</id> <url>${env.NEXUS_URL}</url>
-  </repository>
-</distributionManagement>
+    <snapshotRepository>
+        <id>nexus-snapshots</id>
+        <url>${NEXUS_URL}/repository/maven-snapshots/</url>
+    </snapshotRepository>
+ </distributionManagement>
 	
 </project>
 
